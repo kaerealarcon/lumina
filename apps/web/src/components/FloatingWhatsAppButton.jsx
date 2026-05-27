@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { MessageCircle } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { motion, AnimatePresence } from "framer-motion";
 
 function FloatingWhatsAppButton() {
     const isMobile = useIsMobile();
@@ -13,7 +14,7 @@ function FloatingWhatsAppButton() {
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsVisible(true);
-        }, 1000);
+        }, 1500);
 
         return () => clearTimeout(timer);
     }, []);
@@ -21,30 +22,30 @@ function FloatingWhatsAppButton() {
     if (!isMobile) return null;
 
     return (
-        <a
-            href={whatsappLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-lg transition-all duration-500 hover:scale-110 active:scale-95 ${
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-            style={{
-                animation: isVisible ? "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite" : "none",
-            }}
-            aria-label="Contato via WhatsApp"
-        >
-            <MessageCircle className="w-6 h-6" />
-            <style>{`
-        @keyframes pulse {
-          0%, 100% {
-            transform: scale(1);
-          }
-          50% {
-            transform: scale(1.05);
-          }
-        }
-      `}</style>
-        </a>
+        <AnimatePresence>
+            {isVisible && (
+                <motion.a
+                    href={whatsappLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-lg"
+                    aria-label="Contato via WhatsApp"
+                    initial={{ opacity: 0, scale: 0, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0 }}
+                    transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                    whileHover={{ scale: 1.15 }}
+                    whileTap={{ scale: 0.9 }}
+                >
+                    <MessageCircle className="w-6 h-6" />
+                    <motion.span
+                        className="absolute inset-0 rounded-full bg-[#25D366]"
+                        animate={{ scale: [1, 1.4, 1.4], opacity: [0.5, 0, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+                    />
+                </motion.a>
+            )}
+        </AnimatePresence>
     );
 }
 

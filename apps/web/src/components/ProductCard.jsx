@@ -2,6 +2,7 @@ import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
+import { motion } from "framer-motion";
 
 function ProductCard({ image, name, price, isBestSeller = false }) {
     const phoneNumber = "5511999999999";
@@ -11,16 +12,22 @@ function ProductCard({ image, name, price, isBestSeller = false }) {
     const whatsappLink = `https://wa.me/${phoneNumber}?text=${whatsappMessage}`;
 
     return (
-        <div className="group relative bg-card rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+        <motion.div
+            className="group relative bg-card rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300"
+            whileHover={{ y: -6 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        >
             {isBestSeller && (
                 <Badge className="absolute top-4 right-4 z-10 bg-accent text-accent-foreground">Mais Vendido</Badge>
             )}
 
             <div className="aspect-[3/4] overflow-hidden">
-                <img
+                <motion.img
                     src={image}
                     alt={name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full h-full object-cover"
+                    whileHover={{ scale: 1.08 }}
+                    transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                 />
             </div>
 
@@ -45,7 +52,7 @@ function ProductCard({ image, name, price, isBestSeller = false }) {
                     </a>
                 </Button>
             </div>
-        </div>
+        </motion.div>
     );
 }
 
